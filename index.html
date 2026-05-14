@@ -38,9 +38,9 @@
 
   /* HERO */
   .hero {
-    min-height: 100vh; display: flex; flex-direction: column;
+    display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    text-align: center; padding: 120px 24px 80px; position: relative; overflow: hidden;
+    text-align: center; padding: 32px 24px 48px; position: relative; overflow: hidden;
   }
   .hero::before {
     content: ''; position: absolute; inset: 0;
@@ -71,7 +71,7 @@
     font-family: 'Instrument Serif', serif;
     font-size: clamp(48px, 7vw, 88px); line-height: 1.02;
     letter-spacing: -0.03em; color: var(--ink); max-width: 800px;
-    margin-bottom: 24px; position: relative; z-index: 1;
+    margin-bottom: 12px; position: relative; z-index: 1;
     opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
   }
   .hero-title em { font-style: italic; color: var(--blue); }
@@ -230,17 +230,22 @@
   <a href="#waitlist" class="nav-cta">Join the waitlist</a>
 </nav>
 
+<!-- EYEBROW BANNER -->
+<div style="margin-top:64px;display:flex;align-items:center;justify-content:center;padding:14px 24px;background:rgba(28,99,254,0.06);border-bottom:1px solid rgba(28,99,254,0.12);">
+  <div class="hero-eyebrow" style="margin-bottom:0;opacity:1;animation:eyebrowPulse 2.8s ease-in-out 0s infinite;">Proactive financial monitoring</div>
+</div>
+
 <!-- Live counter strip -->
-<div class="counter-strip" style="margin-top:64px;">
+<div class="counter-strip" style="margin-top:0;">
   <div class="counter-dot"></div>
   <span><span class="counter-num" id="counter-display">0</span> people on the waitlist</span>
 </div>
 
 <!-- HERO -->
 <section class="hero" id="top">
-  <div class="hero-eyebrow">Proactive financial monitoring</div>
   <h1 class="hero-title">Your finances,<br><em>always optimal.</em></h1>
-  <p class="hero-sub">Pare will monitor your loans, savings, broadband and insurance — and alert you the moment a materially better deal exists. No searching. No comparing. No effort.</p>
+  <p class="hero-sub" style="margin-top:16px;"><strong style="color:#0B1330;font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:-0.02em;">Pare</strong> will proactively monitor your loans, savings, broadband and insurance.</p>
+  <h2 class="hero-title" style="font-size:clamp(28px,4vw,48px);margin-top:16px;margin-bottom:24px;color:rgba(11,19,48,0.65);font-family:'Instrument Serif',serif;font-style:italic;letter-spacing:-0.02em;">Stop searching. Start being found.</h2>
 
   <!-- Form state -->
   <div class="waitlist-wrap" id="waitlist">
@@ -292,72 +297,6 @@
   </div>
 
   <p class="hero-note" id="hero-note">No spam. No commitment. Be first to know when Pare launches.</p>
-</section>
-
-<!-- PROBLEM -->
-<section class="problem">
-  <p class="problem-label">The problem</p>
-  <h2 class="problem-headline">UK households are overpaying —<br><em>and nobody is telling them.</em></h2>
-  <div class="stats-row">
-    <div class="stat">
-      <div class="stat-n">£1,400</div>
-      <div class="stat-label">Lost per household, every year</div>
-      <div class="stat-sub">Lloyds Banking Group research · £14,000 over ten years</div>
-    </div>
-    <div class="stat">
-      <div class="stat-n">19.8%</div>
-      <div class="stat-label">Average APR paid — vs 5.8% best available</div>
-      <div class="stat-sub">A 14-point gap. On a loan most borrowers took out years ago and have never been prompted to review. On a £10,000 loan that gap costs over £1,400 a year. Nobody has told them.</div>
-    </div>
-    <div class="stat">
-      <div class="stat-n">49%</div>
-      <div class="stat-label">Of adults feel lost on financial products</div>
-      <div class="stat-sub">FCA Financial Lives Survey · most never act</div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW -->
-<section class="how">
-  <p class="section-eyebrow">How it works</p>
-  <h2 class="section-head">Simple for you.<br>Sophisticated underneath.</h2>
-  <div class="steps">
-    <div>
-      <div class="step-num">01</div>
-      <div class="step-divider"></div>
-      <div class="step-title">Connect your accounts</div>
-      <div class="step-body">Open banking connection in under two minutes. Read-only access — Pare never moves money.</div>
-    </div>
-    <div>
-      <div class="step-num">02</div>
-      <div class="step-divider"></div>
-      <div class="step-title">Pare monitors continuously</div>
-      <div class="step-body">Your rates are tracked against the live market every day — loans, savings, broadband, insurance.</div>
-    </div>
-    <div>
-      <div class="step-num">03</div>
-      <div class="step-divider"></div>
-      <div class="step-title">Alerted only when it matters</div>
-      <div class="step-body">No noise. You hear from Pare only when a better deal exists that you are likely to qualify for.</div>
-    </div>
-    <div>
-      <div class="step-num">04</div>
-      <div class="step-divider"></div>
-      <div class="step-title">Switch with confidence</div>
-      <div class="step-body">Approve and Pare hands you directly to the provider — no middleman markup, no preferred partners. Ranked by what is best for you, not what pays the most.</div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section">
-  <h2 class="cta-title">Stop searching.<br><em>Start being found.</em></h2>
-  <p class="cta-sub">Join the waitlist and be first to access Pare when we launch.</p>
-  <div class="cta-form">
-    <input type="email" id="cta-email" placeholder="Your email address" autocomplete="email">
-    <button type="button" id="cta-btn" onclick="submitWaitlist('cta')">Join the Waitlist</button>
-  </div>
-  <p style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.3);font-weight:300;position:relative;z-index:1;" id="cta-note">No spam. No commitment.</p>
 </section>
 
 <!-- FOOTER -->
@@ -412,8 +351,8 @@ updateCounter();
 
 // ── Submit to Loops ────────────────────────────────────
 async function submitWaitlist(source) {
-  const emailEl = document.getElementById(source === 'hero' ? 'hero-email' : 'cta-email');
-  const btn = document.getElementById(source + '-btn');
+  const emailEl = document.getElementById('hero-email');
+  const btn = document.getElementById('hero-btn');
   const email = emailEl.value.trim();
 
   if (!email || !email.includes('@')) {
@@ -464,7 +403,6 @@ async function submitWaitlist(source) {
       } else {
         btn.textContent = "You're on the list!";
         btn.style.background = '#0D9E6A';
-        document.getElementById('cta-note').textContent = "You're in. We'll be in touch when Pare launches.";
       }
     } else if (data.message && data.message.toLowerCase().includes('already')) {
       btn.disabled = false;
@@ -497,9 +435,7 @@ function copyRef(elId) {
 document.getElementById('hero-email').addEventListener('keydown', e => {
   if (e.key === 'Enter') submitWaitlist('hero');
 });
-document.getElementById('cta-email').addEventListener('keydown', e => {
-  if (e.key === 'Enter') submitWaitlist('cta');
-});
+
 </script>
 
 </body>
