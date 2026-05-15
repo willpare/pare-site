@@ -12,19 +12,32 @@ exports.handler = async function (event) {
     return { statusCode: 200, headers, body: '' };
   }
  
-  // GET: return real contact count from Loops
+  // GET: return real contact count from Loops by paginating through all contacts
   if (event.httpMethod === 'GET') {
     try {
-      const res = await fetch('https://app.loops.so/api/v1/contacts/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${LOOPS_API_KEY}`,
-        },
-        body: JSON.stringify({}),
-      });
-      const data = await res.json();
-      const count = Array.isArray(data) ? data.length : 0;
+      let count = 0;
+      let after = undefined;
+ 
+      while (true) {
+        const url = new URL('https://app.loops.so/api/v1/contacts');
+        url.searchParams.set('limit', '100');
+        if (after) url.searchParams.set('after', after);
+ 
+        const res = await fetch(url.toString(), {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${LOOPS_API_KEY}`,
+          },
+        });
+ 
+        const data = await res.json();
+        const contacts = Array.isArray(data) ? data : [];
+        count += contacts.length;
+ 
+        if (contacts.length < 100) break;
+        after = contacts[contacts.length - 1].id;
+      }
+ 
       return {
         statusCode: 200,
         headers,
