@@ -1,3 +1,5 @@
+const { getStore } = require('@netlify/blobs');
+ 
 exports.handler = async function (event) {
   const LOOPS_API_KEY = process.env.LOOPS_API_KEY;
  
@@ -11,45 +13,28 @@ exports.handler = async function (event) {
     return { statusCode: 200, headers, body: '' };
   }
  
-  // GET: return real contact count from Loops
+  const store = getStore('waitlist');
+ 
+  // GET: return contact count
   if (event.httpMethod === 'GET') {
     try {
-      const res = await fetch('https://app.loops.so/api/v1/contacts?limit=100', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${LOOPS_API_KEY}`,
-        },
-      });
- 
-      const text = await res.text();
-      let data;
-      try { data = JSON.parse(text); } catch(e) { data = text; }
- 
-      // Return raw response for debugging
-      if (event.queryStringParameters && event.queryStringParameters.debug) {
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({ status: res.status, data }),
-        };
-      }
- 
-      const contacts = Array.isArray(data) ? data : (data.contacts || data.data || []);
+      const val = await store.get('count');
+      const count = val ? parseInt(val) : 0;
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify({ count: contacts.length }),
+        body: JSON.stringify({ count }),
       };
     } catch (err) {
       return {
-        statusCode: 500,
+        statusCode: 200,
         headers,
-        body: JSON.stringify({ error: err.message }),
+        body: JSON.stringify({ count: 0 }),
       };
     }
   }
  
-  // POST: add contact to Loops
+  // POST: add contact to Loops and increment counter
   if (event.httpMethod === 'POST') {
     try {
       const { email, refCode, referredBy } = JSON.parse(event.body || '{}');
@@ -81,10 +66,15 @@ exports.handler = async function (event) {
       const data = await res.json();
  
       if (res.ok || data.id || data.success) {
+        // Increment stored count
+        const val = await store.get('count');
+        const current = val ? parseInt(val) : 0;
+        await store.set('count', String(current + 1));
+ 
         return {
           statusCode: 200,
           headers,
-          body: JSON.stringify({ success: true }),
+          body: JSON.stringify({ success: true, count: current + 1 }),
         };
       } else if (data.message && data.message.toLowerCase().includes('already')) {
         return {
