@@ -368,10 +368,9 @@ async function submitWaitlist(source) {
     const data = await res.json();
  
     if (data.success) {
-      // Refresh real counter
+      // Use count returned from POST response
       updateCounter();
-      const count = await fetchCount();
-      const pos = count;
+      const pos = data.count || await fetchCount();
       const refLink = BASE_URL + '?ref=' + refCode;
  
       if (source === 'hero') {
