@@ -201,9 +201,6 @@
   .footer-legal { font-size: 11px; color: #B0B8CC; font-weight: 300; }
  
   /* COUNTER */
-  .counter-strip { background: var(--off); border-bottom: 1px solid var(--line); padding: 12px 48px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: var(--muted); font-weight: 300; }
-  .counter-num { font-weight: 700; color: var(--blue); font-size: 15px; }
-  .counter-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; animation: pulse 2s infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
  
   @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -219,7 +216,6 @@
     .steps { grid-template-columns: 1fr 1fr; gap: 24px; }
     .how, .problem, .cta-section { padding: 60px 20px; }
     footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px 20px; }
-    .counter-strip { padding: 12px 20px; }
   }
 </style>
 </head>
@@ -234,11 +230,6 @@
   <div class="hero-eyebrow" style="margin-bottom:0;opacity:1;animation:eyebrowPulse 2.8s ease-in-out 0s infinite;">Proactive financial monitoring</div>
 </div>
  
-<!-- Live counter strip -->
-<div class="counter-strip" style="margin-top:0;">
-  <div class="counter-dot"></div>
-  <span><span class="counter-num" id="counter-display">0</span> people on the waitlist</span>
-</div>
  
 <!-- HERO -->
 <section class="hero" id="top">
@@ -320,24 +311,7 @@ function makeRefCode(email) {
   return Math.abs(hash).toString(36).substring(0, 8);
 }
  
-// ── Real contact count from Loops (via Netlify function) ──
-async function fetchCount() {
-  try {
-    const res = await fetch(API);
-    const data = await res.json();
-    return typeof data.count === 'number' ? data.count : 0;
-  } catch {
-    return 0;
-  }
-}
  
-async function updateCounter() {
-  const n = await fetchCount();
-  const el = document.getElementById('counter-display');
-  if (el) el.textContent = n.toLocaleString('en-GB');
-}
- 
-updateCounter();
  
 // ── Submit to Loops ────────────────────────────────────
 async function submitWaitlist(source) {
@@ -368,9 +342,7 @@ async function submitWaitlist(source) {
     const data = await res.json();
  
     if (data.success) {
-      // Use count returned from POST response
-      updateCounter();
-      const pos = data.count || await fetchCount();
+      const pos = data.count || 1;
       const refLink = BASE_URL + '?ref=' + refCode;
  
       if (source === 'hero') {
