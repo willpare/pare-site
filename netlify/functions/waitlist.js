@@ -7,41 +7,38 @@ exports.handler = async function (event) {
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   };
  
-  // Handle preflight
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
  
-  // GET: return real contact count from Loops by paginating through all contacts
+  // GET: return real contact count from Loops
   if (event.httpMethod === 'GET') {
     try {
-      let count = 0;
-      let after = undefined;
+      const res = await fetch('https://app.loops.so/api/v1/contacts?limit=100', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${LOOPS_API_KEY}`,
+        },
+      });
  
-      while (true) {
-        const url = new URL('https://app.loops.so/api/v1/contacts');
-        url.searchParams.set('limit', '100');
-        if (after) url.searchParams.set('after', after);
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch(e) { data = text; }
  
-        const res = await fetch(url.toString(), {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${LOOPS_API_KEY}`,
-          },
-        });
- 
-        const data = await res.json();
-        const contacts = Array.isArray(data) ? data : [];
-        count += contacts.length;
- 
-        if (contacts.length < 100) break;
-        after = contacts[contacts.length - 1].id;
+      // Return raw response for debugging
+      if (event.queryStringParameters && event.queryStringParameters.debug) {
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ status: res.status, data }),
+        };
       }
  
+      const contacts = Array.isArray(data) ? data : (data.contacts || data.data || []);
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify({ count }),
+        body: JSON.stringify({ count: contacts.length }),
       };
     } catch (err) {
       return {
